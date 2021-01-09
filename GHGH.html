@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+   
+</head>
+<body>
+<style>#c1 {
+	width: 500px;
+	height: 500px;
+	border: 1px solid black;
+
+}</style>
+<canvas id="c1" width="500" height="500"></canvas>
+<p>номер поколения: <span id="nomer">0</span></p>
+<p>количество клеток: <span id="kletka">0</span></p>
+<input type="button" value="Старт"  onclick="startLife()">
+<input type="button" value="Стоп"  onclick="stopLife()">
+<input type="button" value="Сброс"  onclick="location.reload()">
+<input type="button" value="Случайная клетка" id ="morerandom" onclick="randomLife()">
+<input type="button" value="Несколько случайных клеток" onclick="morerandomLife()">
+<input type="text" value="Введите количество" id="chislo" onclick="texts()">
+ <script>var canvas = document.getElementById('c1');
+var ctx = canvas.getContext('2d');
+ctx.fillStyle = "green";
+var mas=[];
+var nomer=0;
+var k=0;
+var timer;
+canvas.onclick = function(event){
+	var x = event.offsetX;
+	var y = event.offsetY;
+	x = Math.floor(x/10);
+	y = Math.floor(y/10); 
+	mas[y][x]=1;
+	k++;
+	drawField();
+	document.getElementById('kletka').innerHTML = k;
+};
+function goLife(){
+	var n=50, m=50;
+	for (var i=0; i<m; i++){
+		mas[i]=[];
+		for (var j=0; j<n; j++){
+            mas[i][j]=0;
+		}
+	}
+};
+goLife();
+function drawField(){
+    ctx.clearRect(0, 0, 500, 500);   
+	for (var i=0; i<50; i++){
+		for (var j=0; j<50; j++){
+			if (mas[i][j]==1){
+                ctx.fillRect(j*10, i*10, 10, 10);
+                ctx.fillStyle = "green";
+            }
+            
+		}
+	}
+};
+function startLife(){
+	var mas2 = [];
+	for (var i=0; i<50; i++){
+		mas2[i]=[];
+		for (var j=0; j<50; j++){
+            if (mas[i][j]==1){
+			var neighbors = 0;
+			if (mas[fpm(i)-1][j]==1) neighbors++;
+			if (mas[i][fpp(j)+1]==1) neighbors++;
+			if (mas[fpp(i)+1][j]==1) neighbors++;
+			if (mas[i][fpm(j)-1]==1) neighbors++;
+			if (mas[fpm(i)-1][fpp(j)+1]==1) neighbors++;
+			if (mas[fpp(i)+1][fpp(j)+1]==1) neighbors++;
+			if (mas[fpp(i)+1][fpm(j)-1]==1) neighbors++;
+			if (mas[fpm(i)-1][fpm(j)-1]==1) neighbors++;
+            if(neighbors==2 || neighbors==3){mas2[i][j]=1};
+            if(neighbors<2 || neighbors>3){mas2[i][j]=0};
+        }
+
+            if (mas[i][j]==0) {
+            var neighbors = 0;
+			if (mas[fpm(i)-1][j]==1) neighbors++;
+			if (mas[i][fpp(j)+1]==1) neighbors++;
+			if (mas[fpp(i)+1][j]==1) neighbors++;
+			if (mas[i][fpm(j)-1]==1) neighbors++;
+			if (mas[fpm(i)-1][fpp(j)+1]==1) neighbors++;
+			if (mas[fpp(i)+1][fpp(j)+1]==1) neighbors++;
+			if (mas[fpp(i)+1][fpm(j)-1]==1) neighbors++;
+			if (mas[fpm(i)-1][fpm(j)-1]==1) neighbors++;
+            if (neighbors==3){mas2[i][j]=1} else {mas2[i][j]=0}}
+        }    
+    }
+	k=0;
+	for (var i=0; i<50; i++){
+		for (var j=0; j<50; j++){
+			if (mas[i][j]==1)k=k+mas[i][j];}}
+    
+	mas = mas2;
+	drawField();
+	nomer++;
+	document.getElementById('nomer').innerHTML = nomer;
+	document.getElementById('kletka').innerHTML = k;
+	timer = setTimeout(startLife, 300);	
+};
+function fpm(i){
+	if(i==0) {return 50}
+	else {return i}
+};
+function fpp(i){
+	if(i==49) {return -1}
+	else {return i}
+};  
+function stopLife(){
+    clearTimeout(timer);     
+}; 
+function randomLife(){
+var randomL = 1;
+while(randomL>0){
+    var x = Math.random() * 500;
+    var y = Math.random() * 500;
+    x = Math.floor(x/10);
+    y = Math.floor(y/10);
+    if(mas[y][x]==0){
+    mas[y][x]=1;
+    drawField();
+    randomL--;
+    k++;
+    document.getElementById('kletka').innerHTML = k;
+}}};
+function morerandomLife(){
+	var moreL = parseInt(document.getElementById("chislo").value);
+	for (i = 0; i < moreL; i++){randomLife()}
+};
+function texts(){
+	document.getElementById('chislo').value = "";
+}
+</script>
+
+
+
+</body>
+</html>
